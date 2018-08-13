@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 // import API from '../services/API';
 // import './App.css';
 
+import Transaction from '../components/Transaction';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -10,14 +12,14 @@ class App extends Component {
     this.state = {
       address: undefined,
       data: undefined,
-      txs: []
+      txs: undefined
     };
   }
 
   handleSubmit(e) {
     e.preventDefault();
     const addr = this.element.value; //hacky ref way to get value of the input element without making it controlled
-    const baseURL = "https://blockchain.info/multiaddr?active=";
+    const baseURL = "https://blockchain.info/multiaddr?active="; //only multiaddr seems to allow cors param
     const URL = `${baseURL}${addr}&cors=true`; //enabling cors allows it to work 
 
     fetch(URL)
@@ -29,14 +31,8 @@ class App extends Component {
         this.setState({
           address: this.element.value,
           data,
-          txs: this.state.txs.concat(data.txs)
+          txs: data.txs
         });
-    });
-  }
-
-  renderTxs(txs) {
-    txs.map(tx => {
-      <p>Hash: {tx.hash} Total: {tx.result} Fee: {tx.fee}</p>
     });
   }
   
@@ -45,6 +41,7 @@ class App extends Component {
        const balance = this.state.data.wallet.total_balance;
        const sent = this.state.data.wallet.total_sent;
        const received = this.state.data.wallet.total_received;
+       const txs = this.state.data.txs;
       }
 
     return (
@@ -64,7 +61,7 @@ class App extends Component {
           {(this.state.data) && <p>Balance: {this.state.data.wallet.final_balance}</p>}
           {(this.state.data) && <p>Received: {this.state.data.wallet.total_received}</p>}
           {(this.state.data) && <p>Spent: {this.state.data.wallet.total_sent}</p>}
-          {this.renderTxs(this.state.txs)}
+          {(this.state.txs) && <Transaction hash={this.state.data.txs[0]['hash']} total={this.state.data.txs[0]['result']} fee={this.state.data.txs[0]['fee']} />}
       </div>
     );
   }
