@@ -24,11 +24,19 @@ class App extends Component {
     .then(resp => resp.json())
     .then(data => {
         console.log(data);
+        console.log(data.txs);
         
         this.setState({
           address: this.element.value,
-          data
+          data,
+          txs: this.state.txs.concat(data.txs)
         });
+    });
+  }
+
+  renderTxs(txs) {
+    txs.map(tx => {
+      <p>Hash: {tx.hash} Total: {tx.result} Fee: {tx.fee}</p>
     });
   }
   
@@ -53,9 +61,10 @@ class App extends Component {
           </label>
           <input type="submit" value="Click to Submit" />
         </form>
-          {this.state.data && <p>Balance: {this.state.data.wallet.final_balance}</p>}
-          {this.state.data && <p>Received: {this.state.data.wallet.total_received}</p>}
-          {this.state.data && <p>Spent: {this.state.data.wallet.total_sent}</p>}
+          {(this.state.data) && <p>Balance: {this.state.data.wallet.final_balance}</p>}
+          {(this.state.data) && <p>Received: {this.state.data.wallet.total_received}</p>}
+          {(this.state.data) && <p>Spent: {this.state.data.wallet.total_sent}</p>}
+          {this.renderTxs(this.state.txs)}
       </div>
     );
   }
