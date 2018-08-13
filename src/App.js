@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+// import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      address: undefined
+    };
+  }
+
+  handleChange(e) {
+    this.setState({
+      address: e.target.value
+    });
+  }
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          {this.state.address ? 
+            <h1 className="App-title">Blockchain Bitcoin Transactions for: {this.state.address}</h1> 
+          : <h1 className="App-title">Blockchain Bitcoin Transactions</h1>}
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <p>Enter bitcoin address:</p>
+        <input type="text" value={this.state.address} onChange={(e) => this.handleChange(e)} />
       </div>
     );
   }
