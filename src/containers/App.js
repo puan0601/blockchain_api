@@ -25,7 +25,7 @@ class App extends Component {
             <h1 className="App-title">Blockchain Bitcoin Transactions for: {this.state.address}</h1> 
           : <h1 className="App-title">Blockchain Bitcoin Transactions</h1>}
         </header>
-        <h2>Enter Bitcoin address below</h2>
+        <p>Enter Bitcoin address below</p>
         <form onSubmit={(e) => this.handleSubmit(e)}>
           <label htmlFor="bitcoin-address"> 
             <input type="text" name="bitcoin-address" ref={(el) => this.element = el} />
