@@ -6,13 +6,15 @@ class App extends Component {
     super(props);
 
     this.state = {
-      address: undefined
+      address: undefined,
+      data: undefined
     };
   }
 
-  handleChange(e) {
+  handleSubmit(e) {
+    e.preventDefault();
     this.setState({
-      address: e.target.value
+      address: this.element.value
     });
   }
   render() {
@@ -23,8 +25,13 @@ class App extends Component {
             <h1 className="App-title">Blockchain Bitcoin Transactions for: {this.state.address}</h1> 
           : <h1 className="App-title">Blockchain Bitcoin Transactions</h1>}
         </header>
-        <p>Enter bitcoin address:</p>
-        <input type="text" value={this.state.address} onChange={(e) => this.handleChange(e)} />
+        <h2>Enter Bitcoin address below</h2>
+        <form onSubmit={(e) => this.handleSubmit(e)}>
+          <label htmlFor="bitcoin-address"> 
+            <input type="text" name="bitcoin-address" ref={(el) => this.element = el} />
+          </label>
+          <input type="submit" value="Click to Submit" />
+        </form>
       </div>
     );
   }
