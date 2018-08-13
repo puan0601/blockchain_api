@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+// import Axios from 'axios';
+// import API from '../services/API';
 // import './App.css';
 
 class App extends Component {
@@ -13,10 +15,20 @@ class App extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.setState({
-      address: this.element.value
-    });
+    const addr = this.element.value;
+    const baseURL = "https://blockchain.info/multiaddr?active=";
+    const URL = `${baseURL}${addr}&cors=true`;
+
+    fetch(URL)
+      .then(resp => resp.json())
+      .then(data => console.log(data))
+        
+        // this.setState({
+        // address: this.element.value
+        // });
+      
   }
+
   render() {
     return (
       <div className="App">
