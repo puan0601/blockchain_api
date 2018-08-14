@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import io from 'socket.io-client';
 
 // import './App.css';
 import TransactionList from '../components/TransactionList';
@@ -26,8 +25,8 @@ class App extends Component {
     fetch(URL)
     .then(resp => resp.json())
     .then(data => {
-        console.log(data);
-        console.log(data.txs);
+        // console.log(data);
+        // console.log(data.txs);
         
         this.setState({
           address: this.element.value,
@@ -41,30 +40,34 @@ class App extends Component {
     const webSocketUrl = 'wss://ws.blockchain.info/inv';
     const ws = new WebSocket(webSocketUrl);
     console.log(ws);
-    // const msg = { 
-    //   "op" : "addr_sub",
-    //   "addr" : this.state.address
-    // };
+    const msg = { 
+      "op" : "addr_sub",
+      "addr" : this.element.value
+    };
 
     ws.onopen = (event) => {
-      ws.send(JSON.stringify({
-        "op":"addr_sub", 
-        "addr": this.state.address
-      }));
+      ws.send(JSON.stringify(msg)); //subscribes to address
 
-      ws.send(JSON.stringify({"op":"ping_tx"}));
+      ws.send(JSON.stringify({"op":"ping_tx"})); //returns latest transaction
     };
 
     ws.onmessage = (event) => {
-      const resp = event.data.x;
+      const resp = JSON.parse(event.data);
       
-      // const transaction = {
-      //   hash: event.data.x.hash,
-      //   result: event.data.x.out[0]["value"],
-      //   fee: 0
-      // };
-    
+      const transaction = {
+        hash: resp.x.hash,
+        result: resp.x.out[0]["value"],
+        fee: 0
+      };
+      
+      this.setState({
+        txs: [transaction].concat(this.state.txs)
+      });
+  
       console.log(`ws.onmessage response: ${resp}`);
+      console.log(`typeof resp: ${typeof resp}`);
+      console.log(`data.x.hash: ${resp.x.hash}`);
+      console.log(`transaction: ${JSON.stringify(transaction)}`);
     };
   
   }
