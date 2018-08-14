@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import './App.css';
 
-// import './App.css';
 import TransactionList from '../components/TransactionList';
 
 class App extends Component {
@@ -23,11 +23,8 @@ class App extends Component {
     const URL = `${baseURL}${addr}&cors=true`; //enabling cors allows it to work 
 
     fetch(URL)
-    .then(resp => resp.json())
-    .then(data => {
-        // console.log(data);
-        // console.log(data.txs);
-        
+      .then(resp => resp.json())
+      .then(data => {
         this.setState({
           address: this.element.value,
           balance: data.wallet.final_balance,
@@ -35,11 +32,10 @@ class App extends Component {
           received: data.wallet.total_received,
           txs: data.txs
         });
-    });
+      });
 
-    const webSocketUrl = 'wss://ws.blockchain.info/inv';
-    const ws = new WebSocket(webSocketUrl);
-    console.log(ws);
+    const webSocketUrl = 'wss://ws.blockchain.info/inv'; 
+    const ws = new WebSocket(webSocketUrl); //opens websocket connection to blockchain
     const msg = { 
       "op" : "addr_sub",
       "addr" : this.element.value
@@ -48,26 +44,21 @@ class App extends Component {
     ws.onopen = (event) => {
       ws.send(JSON.stringify(msg)); //subscribes to address
 
-      ws.send(JSON.stringify({"op":"ping_tx"})); //returns latest transaction
+      ws.send(JSON.stringify({"op":"ping_tx"})); //returns latest transaction for testing
     };
 
-    ws.onmessage = (event) => {
+    ws.onmessage = (event) => { //handles a new transaction message
       const resp = JSON.parse(event.data);
       
       const transaction = {
         hash: resp.x.hash,
         result: resp.x.out[0]["value"],
-        fee: 0
+        fee: undefined //not implemented yet
       };
       
-      this.setState({
+      this.setState({ //adds the most recent transaction received to the front of txs array
         txs: [transaction].concat(this.state.txs)
       });
-  
-      console.log(`ws.onmessage response: ${resp}`);
-      console.log(`typeof resp: ${typeof resp}`);
-      console.log(`data.x.hash: ${resp.x.hash}`);
-      console.log(`transaction: ${JSON.stringify(transaction)}`);
     };
   
   }
@@ -85,11 +76,11 @@ class App extends Component {
           <label htmlFor="bitcoin-address"> 
             <input type="text" name="bitcoin-address" ref={(el) => this.element = el} />{/* to instantiate the ref on the element*/}
           </label>
-          <input type="submit" value="Click to Submit" />
-        </form>
-          {(this.state.txs) && <p>Total Balance: {this.state.balance}</p>}
-          {(this.state.txs) && <p>Total Received: {this.state.received}</p>}
-          {(this.state.txs) && <p>Total Sent: {this.state.sent}</p>}
+          <button type="submit">Click to Submit!</button>
+        </form>                {/* conditionally renders address info after API resolves */}
+          {(this.state.txs) && <p><strong>Total Balance:</strong> {this.state.balance}</p>}    
+          {(this.state.txs) && <p><strong>Total Received:</strong> {this.state.received}</p>}
+          {(this.state.txs) && <p><strong>Total Sent:</strong> {this.state.sent}</p>}
           {(this.state.txs) && <TransactionList trans={this.state.txs} />}
       </div>
     );

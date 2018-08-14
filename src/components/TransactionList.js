@@ -8,7 +8,10 @@ const TransactionList = (props) => {
     });
 
     return (
-        <ul>{transItems}</ul>
+        <div>
+            <p>Recent Transactions (last 50)</p>
+            <ul>{transItems}</ul>
+        </div>
     );
 };
 

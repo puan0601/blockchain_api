@@ -1,0 +1,16 @@
+input {
+    width: 250px;
+}
+
+button {
+    margin: 15px;
+    padding: 5px 10px;
+    background-color: #44c767;
+    color: #ffffff;
+    border-radius: 30px;
+    border:1px solid #18ab29;
+}
+
+button:hover {
+    background-color: #5cbf2a;
+}
