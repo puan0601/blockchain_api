@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 // import API from '../services/API';
 // import './App.css';
 
-import Transaction from '../components/Transaction';
+// import Transaction from '../components/Transaction';
+import TransactionList from '../components/TransactionList';
 
 class App extends Component {
   constructor(props) {
@@ -11,7 +12,9 @@ class App extends Component {
 
     this.state = {
       address: undefined,
-      data: undefined,
+      balance: undefined,
+      sent: undefined,
+      received: undefined,
       txs: undefined
     };
   }
@@ -30,19 +33,21 @@ class App extends Component {
         
         this.setState({
           address: this.element.value,
-          data,
+          balance: data.wallet.final_balance,
+          sent: data.wallet.total_sent,
+          received: data.wallet.total_received,
           txs: data.txs
         });
     });
   }
   
   render() {
-    if (this.state.data) {
-       const balance = this.state.data.wallet.total_balance;
-       const sent = this.state.data.wallet.total_sent;
-       const received = this.state.data.wallet.total_received;
-       const txs = this.state.data.txs;
-      }
+    // if (this.state.data) {
+    //    const balance = <p>{this.state.balance}</p>;
+    //    const sent = <p>{this.state.sent}</p>;
+    //    const received = <p>{this.state.received}</p>;
+    //    const txs = this.state.txs;
+    //   }
 
     return (
       <div className="App">
@@ -58,10 +63,10 @@ class App extends Component {
           </label>
           <input type="submit" value="Click to Submit" />
         </form>
-          {(this.state.data) && <p>Balance: {this.state.data.wallet.final_balance}</p>}
-          {(this.state.data) && <p>Received: {this.state.data.wallet.total_received}</p>}
-          {(this.state.data) && <p>Spent: {this.state.data.wallet.total_sent}</p>}
-          {(this.state.txs) && <Transaction hash={this.state.data.txs[0]['hash']} total={this.state.data.txs[0]['result']} fee={this.state.data.txs[0]['fee']} />}
+          {(this.state.txs) && <p>Total Balance: {this.state.balance}</p>}
+          {(this.state.txs) && <p>Total Received: {this.state.received}</p>}
+          {(this.state.txs) && <p>Total Sent: {this.state.sent}</p>}
+          {(this.state.txs) && <TransactionList trans={this.state.txs} />}
       </div>
     );
   }
