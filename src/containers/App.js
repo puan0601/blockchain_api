@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import io from 'socket.io-client';
 
 // import './App.css';
 import TransactionList from '../components/TransactionList';
@@ -36,6 +37,36 @@ class App extends Component {
           txs: data.txs
         });
     });
+
+    const webSocketUrl = 'wss://ws.blockchain.info/inv';
+    const ws = new WebSocket(webSocketUrl);
+    console.log(ws);
+    // const msg = { 
+    //   "op" : "addr_sub",
+    //   "addr" : this.state.address
+    // };
+
+    ws.onopen = (event) => {
+      ws.send(JSON.stringify({
+        "op":"addr_sub", 
+        "addr": this.state.address
+      }));
+
+      ws.send(JSON.stringify({"op":"ping_tx"}));
+    };
+
+    ws.onmessage = (event) => {
+      const resp = event.data.x;
+      
+      // const transaction = {
+      //   hash: event.data.x.hash,
+      //   result: event.data.x.out[0]["value"],
+      //   fee: 0
+      // };
+    
+      console.log(`ws.onmessage response: ${resp}`);
+    };
+  
   }
   
   render() {
