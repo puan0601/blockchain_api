@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-// import Axios from 'axios';
-// import API from '../services/API';
-// import './App.css';
 
-// import Transaction from '../components/Transaction';
+// import './App.css';
 import TransactionList from '../components/TransactionList';
 
 class App extends Component {
@@ -42,13 +39,6 @@ class App extends Component {
   }
   
   render() {
-    // if (this.state.data) {
-    //    const balance = <p>{this.state.balance}</p>;
-    //    const sent = <p>{this.state.sent}</p>;
-    //    const received = <p>{this.state.received}</p>;
-    //    const txs = this.state.txs;
-    //   }
-
     return (
       <div className="App">
         <header className="App-header">
